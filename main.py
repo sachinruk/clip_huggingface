@@ -61,4 +61,4 @@ url = st.text_input("Insert url of image", value=DEFAULT_IMAGE)
 image, img_features = get_image(url, model, processor)
 st.image(image)
 
-get_best_captions(img_features, text_embeddings, captions)
+# get_best_captions(img_features, text_embeddings, captions)
