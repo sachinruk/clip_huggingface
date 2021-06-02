@@ -15,7 +15,7 @@ CAPTION_URL = "https://www.dropbox.com/s/n6s30qh1ldycko7/url2caption.csv?dl=1"
 DEFAULT_IMAGE = "https://carsguide-res.cloudinary.com/image/upload/f_auto%2Cfl_lossy%2Cq_auto%2Ct_default/v1/editorial/jaguar-xf-rosebaylac-2.jpg"
 
 
-@st.cache()
+@st.cache(hash_funcs={CLIPModel: lambda _: None, CLIPProcessor: lambda _: None})
 def load_model():
     # wget csv file with captions
     captions = pd.read_csv(CAPTION_URL)
@@ -23,7 +23,9 @@ def load_model():
     response = requests.get(TEXT_EMBED_URL)
     text_embeddings = torch.FloatTensor(np.load(io.BytesIO(response.content)))
     # huggingface model and processor
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", from_tf=False).eval()
+    for p in model.parameters():
+        p.requires_grad = False
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
     return model, processor, captions, text_embeddings
@@ -61,4 +63,4 @@ url = st.text_input("Insert url of image", value=DEFAULT_IMAGE)
 image, img_features = get_image(url, model, processor)
 st.image(image)
 
-# get_best_captions(img_features, text_embeddings, captions)
+get_best_captions(img_features, text_embeddings, captions)
