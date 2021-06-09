@@ -64,3 +64,6 @@ image, img_features = get_image(url, model, processor)
 st.image(image)
 
 get_best_captions(img_features, text_embeddings, captions)
+
+st.write("## Shameless self promotion")
+st.write("If you enjoyed the tutorial buy me a coffee, or better yet [buy my course](https://www.udemy.com/course/machine-learning-and-data-science-2021/?referralCode=E79228C7436D74315787) (usually 90% off).")
